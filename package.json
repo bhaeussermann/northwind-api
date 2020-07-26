@@ -1,0 +1,25 @@
+{
+  "name": "northwind-api",
+  "version": "1.0.0",
+  "description": "A RESTful API providing CRUD functionality for managing Employees in a PostgreSQL database.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhaeussermann/northwind-api.git"
+  },
+  "keywords": [
+    "RESTful",
+    "API",
+    "Express",
+    "Northwind"
+  ],
+  "author": "Bernhard Häussermann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bhaeussermann/northwind-api/issues"
+  },
+  "homepage": "https://github.com/bhaeussermann/northwind-api#readme"
+}
