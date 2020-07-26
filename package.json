@@ -4,7 +4,7 @@
   "description": "A RESTful API providing CRUD functionality for managing Employees in a PostgreSQL database.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/server.js"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,11 @@
   "bugs": {
     "url": "https://github.com/bhaeussermann/northwind-api/issues"
   },
-  "homepage": "https://github.com/bhaeussermann/northwind-api#readme"
+  "homepage": "https://github.com/bhaeussermann/northwind-api#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
