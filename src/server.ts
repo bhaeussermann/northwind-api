@@ -1,12 +1,13 @@
-'use strict';
+import * as express from 'express';
+import { EmployeesRoutesRegistrar } from './routes/employees-routes-registrar';
+import { EmployeesController } from './controllers/employees-controller';
+
 require('dotenv').config();
 
-const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const routes = require('./routes/employees-routes');
-routes(app);
+EmployeesRoutesRegistrar.registerRoutes(app, new EmployeesController());
 
 app.use((req, res) => {
   res.status(404).send({ url: req.originalUrl + ' not found' });
