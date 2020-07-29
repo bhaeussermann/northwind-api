@@ -4,8 +4,11 @@
   "description": "A RESTful API providing CRUD functionality for managing Employees in a PostgreSQL database.",
   "private": true,
   "scripts": {
+    "clean": "rimraf dist",
     "build": "webpack --mode development",
-    "start": "nodemon dist/bundle.js"
+    "build:watch": "webpack --mode development --watch",
+    "run:watch": "nodemon ./dist/bundle.js --watch ./dist",
+    "start": "npm-run-all --parallel build:watch run:watch"
   },
   "repository": {
     "type": "git",
@@ -26,6 +29,7 @@
   "devDependencies": {
     "@types/express": "^4.17.7",
     "nodemon": "^2.0.4",
+    "npm-run-all": "^4.1.5",
     "ts-loader": "^8.0.1",
     "typescript": "^3.9.7",
     "webpack": "^4.44.0",
