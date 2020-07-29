@@ -1,4 +1,6 @@
 const path = require('path');
+const nodeExternals = require('webpack-node-externals');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/server.ts',
@@ -7,6 +9,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   target: 'node',
+  externals: [nodeExternals()],
   devtool: 'inline-source-map',
   module: {
     rules: [
@@ -19,5 +22,16 @@ module.exports = {
   },
   resolve: {
     extensions: [ '.ts', '.js' ]
-  }
+  },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { 
+          from: 'src/*.yaml',
+          to: '',
+          flatten: true
+        }
+      ]
+    })
+  ]
 };

@@ -1,0 +1,131 @@
+openapi: 3.0.0
+info:
+  description: A simple REST API for providing basic CRUD-access to the employees in a Northwind database.
+  version: 1.0.0
+  title: Northwind
+paths:
+  /employees:
+    get:
+      summary: Get all employees
+      operationId: GetAllEmployees
+      responses:
+        "200":
+          description: successful operation
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Employee"
+    post:
+      summary: Add a new employee
+      operationId: AddEmployee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeSansID"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            "*/*":
+              schema:
+                type: integer
+                format: int32
+  "/employees/{employeeId}":
+    get:
+      summary: Find employee by ID
+      operationId: GetEmployeeByID
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: successful operation
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Employee"
+        "404":
+          description: Employee not found
+          content:
+            "*/*":
+              schema:
+                type: string
+    put:
+      summary: Updates an employee
+      operationId: UpdateEmployee
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeUpdate"
+      responses:
+        "200":
+          description: successful operation
+    delete:
+      summary: Deletes an employee
+      operationId: DeleteEmployee
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: successful operation
+components:
+  schemas:
+    Employee:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        lastName:
+          type: string
+        firstName:
+          type: string
+        title:
+          type: string
+        birthDate:
+          type: string
+      required: ["lastName", "firstName", "title"]
+    EmployeeSansID:
+      type: object
+      properties:
+        lastName:
+          type: string
+        firstName:
+          type: string
+        title:
+          type: string
+        birthDate:
+          type: string
+      required: ["lastName", "firstName", "title"]
+    EmployeeUpdate:
+      type: object
+      properties:
+        lastName:
+          type: string
+        firstName:
+          type: string
+        title:
+          type: string
+        birthDate:
+          type: string
