@@ -8,6 +8,7 @@ paths:
     get:
       summary: Get all employees
       operationId: GetAllEmployees
+      tags: [ Employees ]
       responses:
         "200":
           description: successful operation
@@ -20,6 +21,7 @@ paths:
     post:
       summary: Add a new employee
       operationId: AddEmployee
+      tags: [ Employees ]
       requestBody:
         required: true
         content:
@@ -38,6 +40,7 @@ paths:
     get:
       summary: Find employee by ID
       operationId: GetEmployeeByID
+      tags: [ Employees ]
       parameters:
         - name: employeeId
           in: path
@@ -61,6 +64,7 @@ paths:
     put:
       summary: Updates an employee
       operationId: UpdateEmployee
+      tags: [ Employees ]
       parameters:
         - name: employeeId
           in: path
@@ -79,6 +83,7 @@ paths:
     delete:
       summary: Deletes an employee
       operationId: DeleteEmployee
+      tags: [ Employees ]
       parameters:
         - name: employeeId
           in: path

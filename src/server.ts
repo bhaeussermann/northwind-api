@@ -1,6 +1,8 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
+import * as swaggerUi from 'swagger-ui-express';
+import * as yaml from 'yamljs';
 import { OpenApiValidator } from 'express-openapi-validator';
 import { EmployeesRoutesRegistrar } from './routes/employees-routes-registrar';
 import { EmployeesController } from './controllers/employees-controller';
@@ -11,6 +13,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+
+const apiSpec = yaml.load('./dist/api-spec.yaml');
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(apiSpec));
 
 new OpenApiValidator({
   apiSpec: './dist/api-spec.yaml',
