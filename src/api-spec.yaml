@@ -110,6 +110,7 @@ components:
           type: string
         birthDate:
           type: string
+          format: date
       required: ["lastName", "firstName", "title"]
     EmployeeSansID:
       type: object
