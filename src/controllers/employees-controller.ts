@@ -1,5 +1,5 @@
 export class EmployeesController {
-  getEmployeesCount(): number {
+  addEmployee(): number {
     return 5;
   }
 }
