@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { Employee } from '../models/employee';
+import { Employee, EmployeeWithId } from '../models/employee';
 import moment = require('moment');
 
 export class EmployeesController {
@@ -9,7 +9,7 @@ export class EmployeesController {
     this.pool = new Pool();
   }
 
-  async getEmployees(): Promise<Employee[]> {
+  async getEmployees(): Promise<EmployeeWithId[]> {
     const client = await this.pool.connect();
     try {
       const result = await client.query(
@@ -19,8 +19,20 @@ export class EmployeesController {
         lastName: r.lastname,
         firstName: r.firstname,
         title: r.title,
-        birthDate: moment(r.birthdate).format('yyyy-MM-DD')
+        birthDate: !r.birthdate ? null : moment(r.birthdate).format('yyyy-MM-DD')
       }));
+    } finally {
+      client.release();
+    }
+  }
+
+  async addEmployee(employee: Employee): Promise<number> {
+    const client = await this.pool.connect();
+    try {
+      const result = await client.query(
+        'INSERT INTO Employees ("LastName", "FirstName", "Title", "BirthDate") VALUES ($1::text, $2::text, $3::text, $4::date) RETURNING "EmployeeID" id',
+        [ employee.lastName, employee.firstName, employee.title, employee.birthDate ]);
+      return result.rows[0].id;
     } finally {
       client.release();
     }

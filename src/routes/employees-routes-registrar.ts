@@ -7,6 +7,9 @@ export class EmployeesRoutesRegistrar {
     app.route('/employees')
       .get(asyncHandler(async (_req, res) => {
         res.json(await controller.getEmployees());
+      }))
+      .post(asyncHandler(async (req, res) => {
+        res.json(await controller.addEmployee(req.body));
       }));
   }
 }

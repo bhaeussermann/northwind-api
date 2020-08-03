@@ -111,7 +111,8 @@ components:
         birthDate:
           type: string
           format: date
-      required: ["lastName", "firstName", "title"]
+          nullable: true
+      required: [ "lastName", "firstName", "title" ]
     EmployeeSansID:
       type: object
       properties:
@@ -123,7 +124,8 @@ components:
           type: string
         birthDate:
           type: string
-      required: ["lastName", "firstName", "title"]
+          nullable: true
+      required: [ "lastName", "firstName", "title" ]
     EmployeeUpdate:
       type: object
       properties:
@@ -135,3 +137,4 @@ components:
           type: string
         birthDate:
           type: string
+          nullable: true
