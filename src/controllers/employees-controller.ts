@@ -21,13 +21,7 @@ export class EmployeesController {
       do {
         const rows = await this.readRows(cursor, 100);
         for (const row of rows) {
-          employees.push({
-            id: row.id,
-            lastName: row.lastname,
-            firstName: row.firstname,
-            title: row.title,
-            birthDate: !row.birthdate ? null : moment(row.birthdate).format('yyyy-MM-DD')
-          });
+          employees.push(this.getEmployeeFromRow(row));
         }
         didReadRows = !!rows.length;
       }
@@ -35,6 +29,21 @@ export class EmployeesController {
       return employees;
     } finally {
       cursor?.close();
+      client.release();
+    }
+  }
+
+  async getEmployeeDetail(employeeID: number): Promise<EmployeeWithId> {
+    const client = await this.pool.connect();
+    try {
+      const result = await client.query(
+        `SELECT "EmployeeID" id, "LastName" lastname, "FirstName" firstname, "Title" title, "BirthDate" birthdate FROM Employees 
+        WHERE "EmployeeID" = $1::integer
+        `, [ employeeID ]);
+      if (!result.rows.length) return null;
+      return this.getEmployeeFromRow(result.rows[0]);
+    }
+    finally {
       client.release();
     }
   }
@@ -58,5 +67,15 @@ export class EmployeesController {
         else resolve(rows);
       });
     });
+  }
+
+  private getEmployeeFromRow(row: any): EmployeeWithId {
+    return {
+      id: row.id,
+      lastName: row.lastname,
+      firstName: row.firstname,
+      title: row.title,
+      birthDate: !row.birthdate ? null : moment(row.birthdate).format('yyyy-MM-DD')
+    };
   }
 }
