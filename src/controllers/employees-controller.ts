@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+import * as Cursor from 'pg-cursor';
 import { Employee, EmployeeWithId } from '../models/employee';
 import moment = require('moment');
 
@@ -11,17 +12,29 @@ export class EmployeesController {
 
   async getEmployees(): Promise<EmployeeWithId[]> {
     const client = await this.pool.connect();
+    let cursor: Cursor;
     try {
-      const result = await client.query(
-        'SELECT "EmployeeID" id, "LastName" lastname, "FirstName" firstname, "Title" title, "BirthDate" birthdate FROM Employees');
-      return result.rows.map(r => ({
-        id: r.id,
-        lastName: r.lastname,
-        firstName: r.firstname,
-        title: r.title,
-        birthDate: !r.birthdate ? null : moment(r.birthdate).format('yyyy-MM-DD')
-      }));
+      cursor = await client.query(
+        new Cursor('SELECT "EmployeeID" id, "LastName" lastname, "FirstName" firstname, "Title" title, "BirthDate" birthdate FROM Employees'));
+      let employees: EmployeeWithId[] = [];
+      let didReadRows: boolean;
+      do {
+        const rows = await this.readRows(cursor, 100);
+        for (const row of rows) {
+          employees.push({
+            id: row.id,
+            lastName: row.lastname,
+            firstName: row.firstname,
+            title: row.title,
+            birthDate: !row.birthdate ? null : moment(row.birthdate).format('yyyy-MM-DD')
+          });
+        }
+        didReadRows = !!rows.length;
+      }
+      while (didReadRows);
+      return employees;
     } finally {
+      cursor?.close();
       client.release();
     }
   }
@@ -36,5 +49,14 @@ export class EmployeesController {
     } finally {
       client.release();
     }
+  }
+
+  private readRows(cursor: Cursor, rowCount: number): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      cursor.read(rowCount, (error, rows) => {
+        if (error) reject(error);
+        else resolve(rows);
+      });
+    });
   }
 }
