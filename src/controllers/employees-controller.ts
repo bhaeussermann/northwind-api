@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 import * as Cursor from 'pg-cursor';
 import { Employee, EmployeeWithId } from '../models/employee';
 import moment = require('moment');
+import { EmployeeNotFoundError } from './employee-not-found-error';
 
 export class EmployeesController {
   private pool: Pool;
@@ -33,14 +34,14 @@ export class EmployeesController {
     }
   }
 
-  async getEmployeeDetail(employeeID: number): Promise<EmployeeWithId> {
+  async getEmployeeDetail(employeeId: number): Promise<EmployeeWithId> {
     const client = await this.pool.connect();
     try {
       const result = await client.query(
         `SELECT "EmployeeID" id, "LastName" lastname, "FirstName" firstname, "Title" title, "BirthDate" birthdate FROM Employees 
         WHERE "EmployeeID" = $1::integer
-        `, [ employeeID ]);
-      if (!result.rows.length) return null;
+        `, [ employeeId ]);
+      if (!result.rows.length) throw new EmployeeNotFoundError(employeeId);
       return this.getEmployeeFromRow(result.rows[0]);
     }
     finally {
@@ -55,6 +56,16 @@ export class EmployeesController {
         'INSERT INTO Employees ("LastName", "FirstName", "Title", "BirthDate") VALUES ($1::text, $2::text, $3::text, $4::date) RETURNING "EmployeeID" id',
         [ employee.lastName, employee.firstName, employee.title, employee.birthDate ]);
       return result.rows[0].id;
+    } finally {
+      client.release();
+    }
+  }
+
+  async deleteEmployee(employeeId: number): Promise<void> {
+    const client = await this.pool.connect();
+    try {
+      const result = await client.query('DELETE FROM Employees WHERE "EmployeeID" = $1::integer', [ employeeId ]);
+      if (!result.rowCount) throw new EmployeeNotFoundError(employeeId);
     } finally {
       client.release();
     }

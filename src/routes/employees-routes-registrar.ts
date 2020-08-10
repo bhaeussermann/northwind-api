@@ -2,6 +2,7 @@ import { Express } from 'express';
 import * as asyncHandler from 'express-async-handler';
 import { EmployeesController } from '../controllers/employees-controller';
 import { ExpressError } from '../express-error';
+import { EmployeeNotFoundError } from '../controllers/employee-not-found-error';
 
 export class EmployeesRoutesRegistrar {
   static registerRoutes(app: Express, controller: EmployeesController) {
@@ -13,12 +14,23 @@ export class EmployeesRoutesRegistrar {
         res.json(await controller.addEmployee(req.body));
       }));
     
-    app.route('/employees/:employeeID')
+    app.route('/employees/:employeeId')
       .get(asyncHandler(async (req, res) => {
-        const employeeID = +req.params.employeeID;
-        const employee = await controller.getEmployeeDetail(employeeID);
-        if (employee) res.json(employee);
-        else throw new ExpressError(404, `Employee with ID ${employeeID} not found.`);
+        try {
+          res.json(await controller.getEmployeeDetail(+req.params.employeeId));
+        } catch (error) {
+          if (error instanceof EmployeeNotFoundError) throw new ExpressError(404, error.message);
+          throw error;
+        }
+      }))
+      .delete(asyncHandler(async (req, res) => {
+        try {
+          await controller.deleteEmployee(+req.params.employeeId);
+          res.sendStatus(200);
+        } catch (error) {
+          if (error instanceof EmployeeNotFoundError) throw new ExpressError(404, error.message);
+          throw error;
+        }
       }));
   }
 }
