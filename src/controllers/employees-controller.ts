@@ -61,6 +61,31 @@ export class EmployeesController {
     }
   }
 
+  async updateEmployee(employeeId: number, employee: Employee): Promise<void> {
+    let assignmentsExpressions = [];
+    let parameters = [ employeeId ];
+
+    const addAssignment = (columnName: string, value: any, valueType: 'text' | 'integer' | 'date' = 'text') => {
+      parameters.push(value);
+      assignmentsExpressions.push(`"${columnName}" = $${parameters.length}::${valueType}`);
+    };
+
+    if (employee.lastName) addAssignment('LastName', employee.lastName);
+    if (employee.firstName) addAssignment('FirstName', employee.firstName);
+    if (employee.title) addAssignment('Title', employee.title);
+    if (employee.birthDate) addAssignment('BirthDate', employee.birthDate, 'date');
+
+    const client = await this.pool.connect();
+    try {
+      const result = await client.query(
+        `UPDATE Employees SET ${assignmentsExpressions.join(', ')} WHERE "EmployeeID" = $1::integer`,
+        parameters);
+      if (!result.rowCount) throw new EmployeeNotFoundError(employeeId);
+    } finally {
+      client.release();
+    }
+  }
+
   async deleteEmployee(employeeId: number): Promise<void> {
     const client = await this.pool.connect();
     try {

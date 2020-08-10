@@ -23,6 +23,15 @@ export class EmployeesRoutesRegistrar {
           throw error;
         }
       }))
+      .put(asyncHandler(async (req, res) => {
+        try {
+          await controller.updateEmployee(+req.params.employeeId, req.body);
+          res.sendStatus(200);
+        } catch (error) {
+          if (error instanceof EmployeeNotFoundError) throw new ExpressError(404, error.message);
+          throw error;
+        }
+      }))
       .delete(asyncHandler(async (req, res) => {
         try {
           await controller.deleteEmployee(+req.params.employeeId);
