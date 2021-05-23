@@ -7,9 +7,9 @@
     "clean": "rimraf dist",
     "build": "webpack --mode development",
     "build:watch": "webpack --mode development --watch",
-    "run": "node ./dist/bundle.js",
-    "run:watch": "nodemon ./dist/bundle.js --watch ./dist",
-    "start": "npm-run-all --parallel build:watch run:watch"
+    "start": "node ./dist/bundle.js",
+    "start:watch": "nodemon ./dist/bundle.js --watch ./dist",
+    "start:dev": "npm-run-all --parallel build:watch run:watch"
   },
   "repository": {
     "type": "git",
