@@ -31,6 +31,11 @@ module.exports = {
           from: 'src/*.yaml',
           to: '',
           flatten: true
+        },
+        { 
+          from: 'src/*.json',
+          to: '',
+          flatten: true
         }
       ]
     }),
