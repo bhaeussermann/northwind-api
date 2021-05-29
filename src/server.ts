@@ -14,11 +14,11 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-const apiSpec = yaml.load('./dist/api-spec.yaml');
+const apiSpec = yaml.load('./api-spec.yaml');
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(apiSpec));
 
 new OpenApiValidator({
-  apiSpec: './dist/api-spec.yaml',
+  apiSpec: './api-spec.yaml',
   validateRequests: true,
   validateResponses: true
 })
