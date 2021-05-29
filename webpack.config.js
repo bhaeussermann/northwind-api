@@ -1,5 +1,4 @@
 const path = require('path');
-const nodeExternals = require('webpack-node-externals');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
@@ -9,7 +8,6 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   target: 'node',
-  externals: [nodeExternals()],
   devtool: 'inline-source-map',
   module: {
     rules: [
@@ -23,6 +21,9 @@ module.exports = {
   resolve: {
     extensions: [ '.ts', '.js' ]
   },
+  node: {
+    __dirname: false
+  },
   plugins: [
     new CopyPlugin({
       patterns: [
@@ -30,12 +31,16 @@ module.exports = {
           from: 'src/*.yaml',
           to: '',
           flatten: true
-        },
-        { 
-          from: 'src/*.json',
-          to: '',
-          flatten: true
         }
+      ]
+    }),
+    new CopyPlugin({
+      patterns: [
+        './node_modules/swagger-ui-dist/swagger-ui.css',
+        './node_modules/swagger-ui-dist/swagger-ui-bundle.js',
+        './node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js',
+        './node_modules/swagger-ui-dist/favicon-16x16.png',
+        './node_modules/swagger-ui-dist/favicon-32x32.png'
       ]
     })
   ]

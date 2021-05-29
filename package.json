@@ -37,8 +37,7 @@
     "ts-loader": "^8.0.1",
     "typescript": "^3.9.7",
     "webpack": "^4.44.0",
-    "webpack-cli": "^3.3.12",
-    "webpack-node-externals": "^2.5.0"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
@@ -48,6 +47,7 @@
     "moment": "^2.27.0",
     "pg": "^8.3.0",
     "pg-cursor": "^2.3.0",
+    "pg-native": "^3.0.0",
     "swagger-ui-express": "^4.1.4",
     "yamljs": "^0.3.0"
   }
