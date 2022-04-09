@@ -45,7 +45,7 @@
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "express-openapi-validator": "^3.16.7",
-    "moment": "^2.27.0",
+    "moment": "^2.29.2",
     "pg": "^8.3.0",
     "pg-cursor": "^2.3.0",
     "swagger-ui-express": "^4.1.4",
