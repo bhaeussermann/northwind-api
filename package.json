@@ -44,7 +44,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
-    "express-openapi-validator": "^3.16.7",
+    "express-openapi-validator": "^4.0.0",
     "moment": "^2.29.4",
     "pg": "^8.3.0",
     "pg-cursor": "^2.3.0",
