@@ -16,7 +16,7 @@ export class EmployeesController {
     let cursor: Cursor;
     try {
       cursor = await client.query(
-        new Cursor('SELECT "EmployeeID" id, "LastName" lastname, "FirstName" firstname, "Title" title, "BirthDate" birthdate FROM Employees'));
+        new Cursor('SELECT "employee_id" id, "last_name" lastname, "first_name" firstname, "title" title, "birth_date" birthdate FROM employees'));
       let employees: EmployeeWithId[] = [];
       let didReadRows: boolean;
       do {
@@ -38,8 +38,8 @@ export class EmployeesController {
     const client = await this.pool.connect();
     try {
       const result = await client.query(
-        `SELECT "EmployeeID" id, "LastName" lastname, "FirstName" firstname, "Title" title, "BirthDate" birthdate FROM Employees 
-        WHERE "EmployeeID" = $1::integer
+        `SELECT "employee_id" id, "last_name" lastname, "first_name" firstname, "title" title, "birth_date" birthdate FROM employees
+        WHERE "employee_id" = $1::integer
         `, [ employeeId ]);
       if (!result.rows.length) throw new EmployeeNotFoundError(employeeId);
       return this.getEmployeeFromRow(result.rows[0]);
@@ -53,7 +53,7 @@ export class EmployeesController {
     const client = await this.pool.connect();
     try {
       const result = await client.query(
-        'INSERT INTO Employees ("LastName", "FirstName", "Title", "BirthDate") VALUES ($1::text, $2::text, $3::text, $4::date) RETURNING "EmployeeID" id',
+        'INSERT INTO employees ("last_name", "first_name", "title", "birth_date") VALUES ($1::text, $2::text, $3::text, $4::date) RETURNING "employee_id" id',
         [ employee.lastName, employee.firstName, employee.title, employee.birthDate ]);
       return result.rows[0].id;
     } finally {
@@ -70,15 +70,15 @@ export class EmployeesController {
       assignmentsExpressions.push(`"${columnName}" = $${parameters.length}::${valueType}`);
     };
 
-    if (employee.lastName) addAssignment('LastName', employee.lastName);
-    if (employee.firstName) addAssignment('FirstName', employee.firstName);
-    if (employee.title) addAssignment('Title', employee.title);
-    if (employee.birthDate) addAssignment('BirthDate', employee.birthDate, 'date');
+    if (employee.lastName) addAssignment('last_name', employee.lastName);
+    if (employee.firstName) addAssignment('first_name', employee.firstName);
+    if (employee.title) addAssignment('title', employee.title);
+    if (employee.birthDate) addAssignment('birth_date', employee.birthDate, 'date');
 
     const client = await this.pool.connect();
     try {
       const result = await client.query(
-        `UPDATE Employees SET ${assignmentsExpressions.join(', ')} WHERE "EmployeeID" = $1::integer`,
+        `UPDATE employees SET ${assignmentsExpressions.join(', ')} WHERE "employee_id" = $1::integer`,
         parameters);
       if (!result.rowCount) throw new EmployeeNotFoundError(employeeId);
     } finally {
@@ -89,7 +89,7 @@ export class EmployeesController {
   async deleteEmployee(employeeId: number): Promise<void> {
     const client = await this.pool.connect();
     try {
-      const result = await client.query('DELETE FROM Employees WHERE "EmployeeID" = $1::integer', [ employeeId ]);
+      const result = await client.query('DELETE FROM employees WHERE "employee_id" = $1::integer', [ employeeId ]);
       if (!result.rowCount) throw new EmployeeNotFoundError(employeeId);
     } finally {
       client.release();
