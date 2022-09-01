@@ -18,6 +18,12 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Employee"
+        "500":
+          description: Server error
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Error"
     post:
       summary: Add a new employee
       operationId: AddEmployee
@@ -36,6 +42,12 @@ paths:
               schema:
                 type: integer
                 format: int32
+        "500":
+          description: Server error
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Error"
   "/employees/{employeeId}":
     get:
       summary: Find employee by ID
@@ -60,7 +72,13 @@ paths:
           content:
             "*/*":
               schema:
-                type: string
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Server error
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Error"
     put:
       summary: Updates an employee
       operationId: UpdateEmployee
@@ -80,6 +98,12 @@ paths:
       responses:
         "200":
           description: successful operation
+        "500":
+          description: Server error
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Error"
     delete:
       summary: Deletes an employee
       operationId: DeleteEmployee
@@ -94,6 +118,12 @@ paths:
       responses:
         "200":
           description: successful operation
+        "500":
+          description: Server error
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     Employee:
@@ -138,3 +168,8 @@ components:
         birthDate:
           type: string
           nullable: true
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
