@@ -9,7 +9,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   target: 'node',
-  externals: [nodeExternals()],
+  externals: nodeExternals(),
   devtool: 'inline-source-map',
   module: {
     rules: [
